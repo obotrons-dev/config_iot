@@ -4,10 +4,10 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 
 const background = Color(0xFFFEF5ED);
-const font = Color(0xFF99A799);
-const button = Color(0xFF99A799);
+const font = Color(0xFF536DFE);
+const button = Color(0xFF536DFE);
 final ButtonStyle style = ElevatedButton.styleFrom(
-    primary: button, textStyle: const TextStyle(fontSize: 20, color: font));
+    primary: button, textStyle: const TextStyle(fontSize: 20,));
 
 class ScanMac extends StatefulWidget {
   const ScanMac({Key key}) : super(key: key);

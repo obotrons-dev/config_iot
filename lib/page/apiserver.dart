@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:ap_config/page/wifistation.dart';
 import 'dart:io' show Platform;
 
+const background = Color(0xFFFEF5ED);
+const font = Color(0xFF536DFE);
+const button = Color(0xFF536DFE);
+final ButtonStyle style =
+ElevatedButton.styleFrom(primary: button,textStyle: const TextStyle(fontSize: 20,));
+
 class ApiServer extends StatefulWidget {
   const ApiServer({Key key}) : super(key: key);
 
@@ -49,6 +55,7 @@ class _ApiServerState extends State<ApiServer> {
     ota = new TextEditingController(text: 'http://api.arduino.obotrons.net/api/ota.php');
     otacode = new TextEditingController();
     millisec = new TextEditingController();
+    _selectedValue = "5";
 
   }
 
@@ -89,193 +96,216 @@ class _ApiServerState extends State<ApiServer> {
 
   @override
   Widget build(BuildContext context) {
-    const background = Color(0xFFFEF5ED);
-    const font = Color(0xFF99A799);
-    const button = Color(0xFF99A799);
-    final ButtonStyle style =
-    ElevatedButton.styleFrom(primary: button,textStyle: const TextStyle(fontSize: 20,));
     return Scaffold(
       appBar: AppBar(
-        title: Text("API Setting",style: TextStyle(color: font),),
-        backgroundColor: background,
-        iconTheme: IconThemeData(color: font),
+        elevation: 0,
+        title: Text("API Setting",style: TextStyle(color: background),),
+        backgroundColor: font,
+        iconTheme: IconThemeData(color: background),
       ),
       backgroundColor: background,
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: new EdgeInsets.all(20.0),
-                    child: Text(
-                      "Api Server Setting",style: TextStyle(fontSize: 20),
+      body: Container(
+        height: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [font, background],
+            )),
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: new EdgeInsets.all(20.0),
+                      child: Text(
+                        "Api Server Setting",style: TextStyle(fontSize: 20,color: background),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(padding: EdgeInsets.only(left:70)),
-                      Container(
-                        child: SizedBox(
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(padding: EdgeInsets.only(left:70)),
+                        Container(
+                          child: SizedBox(
+                            width: 250.0,
+                            child :Container(
+                              padding: EdgeInsets.only(top: 15),
+                              child: TextField(
+                                controller: storage,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(10.0),
+                                  border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  labelText: 'Storage',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(padding: EdgeInsets.only(left:70)),
+                        SizedBox(
                           width: 250.0,
                           child :Container(
                             padding: EdgeInsets.only(top: 15),
                             child: TextField(
-                              controller: storage,
+                              controller: path,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.all(10.0),
                                 border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
                                 ),
-                                labelText: 'Storage',
+                                labelText: 'Storage path',
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(padding: EdgeInsets.only(left:70)),
-                      SizedBox(
-                        width: 250.0,
-                        child :Container(
-                          padding: EdgeInsets.only(top: 15),
-                          child: TextField(
-                            controller: path,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'Storage path',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(padding: EdgeInsets.only(left:70)),
-                      SizedBox(
-                        width: 250.0,
-                        child :Container(
-                          padding: EdgeInsets.only(top: 15),
-                          child: TextField(
-                            controller: http,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'HTTP header',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(padding: EdgeInsets.only(left:70)),
-                      SizedBox(
-                        width: 250.0,
-                        child :Container(
-                          padding: EdgeInsets.only(top: 15),
-                          child: TextField(
-                            controller: ota,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'OTA Storage',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(padding: EdgeInsets.only(left:70)),
-                      SizedBox(
-                        width: 250.0,
-                        child :Container(
-                          padding: EdgeInsets.only(top: 15),
-                          child: TextField(
-                            controller: otacode,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'OTA code',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(padding: EdgeInsets.only(left:70)),
-                      SizedBox(
-                        width: 250.0,
-                        child :Container(
-                          padding: EdgeInsets.only(top: 15),
-                          child: Container(
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(),
-                                color:background),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                icon: Icon(Icons.arrow_drop_down_circle,
-                                    color: Colors.grey.withOpacity(0.7)),
-                                items: items,
-                                onChanged: (String value) {
-                                  setState(() {
-                                    _selectedValue = value;
-                                  });
-                                },
-                                hint: Text(
-                                  "Time to send Data(minute)",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(padding: EdgeInsets.only(left:70)),
+                        SizedBox(
+                          width: 250.0,
+                          child :Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: TextField(
+                              controller: http,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
                                 ),
-                                value: _selectedValue,
+                                labelText: 'HTTP header',
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                  style: style,
-                  onPressed:api
-                  , child: Text(
-                      "Next"
-                  )),
-            ],
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(padding: EdgeInsets.only(left:70)),
+                        SizedBox(
+                          width: 250.0,
+                          child :Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: TextField(
+                              controller: ota,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'OTA Storage',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(padding: EdgeInsets.only(left:70)),
+                        SizedBox(
+                          width: 250.0,
+                          child :Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: TextField(
+                              controller: otacode,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(10.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'OTA code',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(padding: EdgeInsets.only(left:70)),
+                        SizedBox(
+                          width: 250.0,
+                          child :Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              child: Text("Time to SendData(minute)"),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(padding: EdgeInsets.only(left:70)),
+                        SizedBox(
+                          width: 250.0,
+                          child :Container(
+                            padding: EdgeInsets.only(top: 15),
+                            child: Container(
+                              padding: EdgeInsets.only(left: 10, right: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  border: Border.all(),
+                                  color:background),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                  style: TextStyle(color: font),
+                                  icon: Icon(Icons.arrow_drop_down_circle,
+                                      color: Colors.grey.withOpacity(0.7)),
+                                  items: items,
+                                  onChanged: (String value) {
+                                    setState(() {
+                                      _selectedValue = value;
+                                    });
+                                  },
+                                  hint: Text(
+                                    "Time to send Data(minute)",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  value: _selectedValue,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                    style: style,
+                    onPressed:api
+                    , child: Text(
+                    "Next"
+                )),
+              ],
+            ),
           ),
         ),
-      ),
+      )
+
     );
   }
 }

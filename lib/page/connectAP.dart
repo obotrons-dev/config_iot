@@ -1,24 +1,14 @@
 import 'package:ap_config/mainpage/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:wifi_iot/wifi_iot.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 
 const background = Color(0xFFFEF5ED);
-const font = Color(0xFF99A799);
-const button = Color(0xFF99A799);
+const font = Color(0xFF536DFE);
+const button = Color(0xFF536DFE);
 final ButtonStyle style =
 ElevatedButton.styleFrom(primary: button,textStyle: const TextStyle(fontSize: 20,));
-final snackBar = SnackBar(content: Container(height: 30,
-  padding: EdgeInsets.only(top:5),
-  child: Text('Password wrong',style: TextStyle(color:Colors.black,fontSize: 14),textAlign: TextAlign.center,),
-),
-  duration: const Duration(milliseconds: 1500),
-  padding: const EdgeInsets.symmetric(
-    horizontal: 8.0, // Inner padding for SnackBar content.
-  ),
-  width: 200,
-  backgroundColor: Colors.redAccent,
-  behavior: SnackBarBehavior.floating,);
 
 
 class Attack extends StatefulWidget {
@@ -29,8 +19,7 @@ class Attack extends StatefulWidget {
 }
 
 class _AttackState extends State<Attack> {
-  String result = "", currentPass = '' , ssid = '' ,pwd = '';
-  bool done = false, success = false;
+  String currentPass = '' , ssid = '' ,pwd = '';
   TextEditingController passwords;
 
 
@@ -42,25 +31,19 @@ class _AttackState extends State<Attack> {
   }
 
   startAttack() async {
-
+    await EasyLoading.show(status: 'loading...');
     currentPass = passwords.text;
-
     var isConnected = await WiFiForIoTPlugin.connect(widget.wifiNetwork,
         security: NetworkSecurity.WPA, password: currentPass);
 
     if(isConnected) {
-    setState(() {
-    success = true;
-    done = true;
-    });
+      EasyLoading.showSuccess('success');
     Navigator.pushAndRemoveUntil(
       context, MaterialPageRoute(builder: (context) => ProfilesConfig()),
           (Route<dynamic> route) => false,);
+    EasyLoading.dismiss();
     }
-    if (!isConnected) {
-      setState(() {
-      });
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    else {
     }
   }
 
@@ -70,11 +53,20 @@ class _AttackState extends State<Attack> {
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         automaticallyImplyLeading: false,
-        title: Text("Password for " + widget.wifiNetwork,style: TextStyle(color: font),),
-        backgroundColor: background,
+        title: Text("Password for " + widget.wifiNetwork,style: TextStyle(color: background),),
+        backgroundColor: font,
       ),
+      backgroundColor: background,
       body: Container(
+        height: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [font, background],
+            )),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

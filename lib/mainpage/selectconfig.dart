@@ -2,6 +2,13 @@ import 'package:ap_config/page/apiserver.dart';
 import 'package:ap_config/page/mqttserver.dart';
 import 'package:flutter/material.dart';
 
+
+const background = Color(0xFFFEF5ED);
+const font = Color(0xFF536DFE);
+const button = Color(0xFF536DFE);
+final ButtonStyle style =
+ElevatedButton.styleFrom(primary: button,textStyle: const TextStyle(fontSize: 20,));
+
 class ConfigAP extends StatefulWidget {
   const ConfigAP({Key key}) : super(key: key);
 
@@ -12,28 +19,26 @@ class ConfigAP extends StatefulWidget {
 class _ConfigAPState extends State<ConfigAP>  with SingleTickerProviderStateMixin {
   @override
   void initState() {
-
-      setState(() {
-      });
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    const background = Color(0xFFFEF5ED);
-    const font = Color(0xFF99A799);
-    const button = Color(0xFF99A799);
-    final ButtonStyle style =
-    ElevatedButton.styleFrom(primary: button,textStyle: const TextStyle(fontSize: 20,));
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: background,
-        iconTheme: IconThemeData(color: font),
+        backgroundColor: font,
+        iconTheme: IconThemeData(color: background),
         elevation: 0,
       ),
         backgroundColor: background,
       body: Container(
+        height: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [font, background],
+            )),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -43,7 +48,7 @@ class _ConfigAPState extends State<ConfigAP>  with SingleTickerProviderStateMixi
                 SizedBox(
                   child:  Container(
                     padding: EdgeInsets.only(top:14,left: 30,bottom: 30),
-                    child: Text("Configuration",style: TextStyle(color:font,fontSize: 35,fontWeight:FontWeight.w900,)),
+                    child: Text("Configuration",style: TextStyle(color:background,fontSize: 35,fontWeight:FontWeight.w900,)),
                   ),
                 ),
               ],

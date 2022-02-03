@@ -21,6 +21,7 @@ dependencies:
   qr_code_scanner: ^0.6.1
   app_settings: ^4.1.1
   network_info_plus: ^2.1.2
+  dart_ipify: ^1.1.1
 
 dev_dependencies:
   flutter_test:

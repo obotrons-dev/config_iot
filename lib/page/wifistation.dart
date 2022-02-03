@@ -4,60 +4,72 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 const background = Color(0xFFFEF5ED);
-const font = Color(0xFF99A799);
-const button = Color(0xFF99A799);
+const font = Color(0xFF536DFE);
+const button = Color(0xFF536DFE);
 final ButtonStyle style =
-ElevatedButton.styleFrom(primary: button,textStyle: const TextStyle(fontSize: 20,color: font));
+ElevatedButton.styleFrom(
+    primary: button, textStyle: const TextStyle(fontSize: 20,));
 
-final snackBar = SnackBar(content: Container(height: 30,
-  padding: EdgeInsets.only(top:5),
-  child: Text('copy to clipboard ',style: TextStyle(color:font,fontSize: 14),textAlign: TextAlign.center,),
-),
+final snackBar = SnackBar(
+  content: Container(
+    height: 30,
+    padding: EdgeInsets.only(top: 5),
+    child: Text(
+      'copy to clipboard ',
+      style: TextStyle(color: font, fontSize: 14),
+      textAlign: TextAlign.center,
+    ),
+  ),
   duration: const Duration(milliseconds: 1500),
   padding: const EdgeInsets.symmetric(
     horizontal: 8.0, // Inner padding for SnackBar content.
   ),
   width: 200,
   backgroundColor: background,
-  behavior: SnackBarBehavior.floating,);
-
+  behavior: SnackBarBehavior.floating,
+);
 
 class WifiStation extends StatefulWidget {
+  final dynamic data;
 
-  final dynamic data ;
   WifiStation(this.data);
-
 
   @override
   _WifiStationState createState() => _WifiStationState();
 }
 
 class _WifiStationState extends State<WifiStation> {
-
-
   TextEditingController wifi_ssid;
   TextEditingController passwords;
-  final _scrollController =  ScrollController();
+  final _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext poContext) {
-
     return Scaffold(
-      backgroundColor: background,
       appBar: AppBar(
-        backgroundColor: background,
-        iconTheme: IconThemeData(color: font),
+        backgroundColor: font,
+        iconTheme: IconThemeData(color: background),
         elevation: 0,
       ),
-        body: getWidgets(poContext),
+      body: Container(
+        height: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [font, background],
+            )),
+        child: getWidgets(poContext),
+      )
     );
   }
 
-
   List<WifiNetwork> _htResultNetwork = [];
   String ssid = "";
+
   @override
   initState() {
     getWifis();
@@ -66,15 +78,13 @@ class _WifiStationState extends State<WifiStation> {
     super.initState();
   }
 
-
-  Future sendData() async{
-
-    if(wifi_ssid.text.length > 0 && passwords.text.length > 0){
-
-      var senddata = {"config": this.widget.data,
-                      "wifi" : {"ssid" :wifi_ssid.text,
-                                "wifi_password": passwords.text
-                                }
+  Future sendData() async {
+    await EasyLoading.show(status: 'loading...');
+    if (wifi_ssid.text.length > 0 && passwords.text.length > 0) {
+      var senddata = {
+        "local":"no",
+        "config": this.widget.data,
+        "wifi": {"ssid": wifi_ssid.text, "wifi_password": passwords.text}
       };
       String json = jsonEncode(senddata);
       var url = "http://192.168.4.11/loadConfig?data=${json}";
@@ -82,40 +92,16 @@ class _WifiStationState extends State<WifiStation> {
       String jsonResponse = response.body;
       print(jsonResponse);
 
-      if(response.statusCode == 200){
-        ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Container(height: 30,
-          padding: EdgeInsets.only(top:5),
-          child: Text("SendData Complete",style: TextStyle(color:background,fontSize: 14),textAlign: TextAlign.center,),
-        ),
-          duration: const Duration(milliseconds: 2000),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 8.0, // Inner padding for SnackBar content.
-          ),
-          width: 250,
-          backgroundColor: font,
-          behavior: SnackBarBehavior.floating,));
-        Navigator.
-        pushReplacement(
+      if (response.statusCode == 200) {
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomeApp()));
+        EasyLoading.dismiss();
+      } else {
+        EasyLoading.showError('fail');
+        Navigator.pop(context);
       }
     }
-    else{
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Container(height: 30,
-        padding: EdgeInsets.only(top:5),
-        child: Text("Pleas Input ssid&password",style: TextStyle(color:background,fontSize: 14),textAlign: TextAlign.center,),
-      ),
-        duration: const Duration(milliseconds: 2000),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8.0, // Inner padding for SnackBar content.
-        ),
-        width: 250,
-        backgroundColor: Colors.red[400],
-        behavior: SnackBarBehavior.floating,));
-    }
-
   }
-
-
   getWifis() async {
     _htResultNetwork = await loadWifiList();
     setState(() {});
@@ -150,8 +136,7 @@ class _WifiStationState extends State<WifiStation> {
   }
 
   Widget getWidgets(context) {
-    WiFiForIoTPlugin.isConnected().then((val) => setState(() {
-    }));
+    WiFiForIoTPlugin.isConnected().then((val) => setState(() {}));
 
     return SingleChildScrollView(
       child: Column(
@@ -162,13 +147,18 @@ class _WifiStationState extends State<WifiStation> {
 
   List<Widget> getButtonWidgetsForAndroid(context) {
     List<Widget> htPrimaryWidgets = List();
-    WiFiForIoTPlugin.isEnabled().then((val) => setState(() {
-    }));
+    WiFiForIoTPlugin.isEnabled().then((val) => setState(() {}));
     htPrimaryWidgets.addAll({
       SizedBox(height: 10),
-      Text("Config Wifi"   ,style: TextStyle(fontSize: 20,fontFamily: 'RobotoMono', color: font),),
+      Text(
+        "Config Wifi",
+        style: TextStyle(fontSize: 20, fontFamily: 'RobotoMono', color: background),
+      ),
       IconButton(
-          icon: Icon(Icons.refresh,color: font,),
+          icon: Icon(
+            Icons.refresh,
+            color: background,
+          ),
           onPressed: () {
             getWifis();
           }),
@@ -208,7 +198,6 @@ class _WifiStationState extends State<WifiStation> {
             decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Password',
-
             ),
           ),
         ),
@@ -217,16 +206,17 @@ class _WifiStationState extends State<WifiStation> {
         visible: _isVisible,
         child: ElevatedButton(
           style: style,
-         onPressed:(){
+          onPressed: () {
             sendData();
-         },
-          child:Text("submit"),
+          },
+          child: Text("submit"),
         ),
       ),
     });
 
     return htPrimaryWidgets;
   }
+
   bool _isVisible = true;
 
   void showToast() {
@@ -248,8 +238,8 @@ class _WifiStationState extends State<WifiStation> {
                 children: [
                   TextField(
                     decoration: InputDecoration(hintText: 'ssid'),
-                    controller: wifi_ssid = new TextEditingController(
-                        text: '${network}'),
+                    controller: wifi_ssid =
+                        new TextEditingController(text: '${network}'),
                   ),
                   TextField(
                     decoration: InputDecoration(hintText: 'password'),
@@ -261,7 +251,8 @@ class _WifiStationState extends State<WifiStation> {
             actions: <Widget>[
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Color(0xFFE64A19), textStyle: const TextStyle(fontSize: 20, color: font)) ,
+                    primary: Color(0xFFE64A19),
+                    textStyle: const TextStyle(fontSize: 20, color: font)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -271,12 +262,12 @@ class _WifiStationState extends State<WifiStation> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Color(0xFF388E3C), textStyle: const TextStyle(fontSize: 20, color: font)) ,
+                    primary: Color(0xFF388E3C),
+                    textStyle: const TextStyle(fontSize: 20, color: font)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
                     sendData();
-                    Navigator.pop(context);
                   });
                 },
               ),
@@ -285,50 +276,59 @@ class _WifiStationState extends State<WifiStation> {
         });
   }
 
-
   Widget getList(BuildContext context) {
-
     Set<String> newstr = Set();
-    for (var x =0; x < _htResultNetwork.length ; x++){
+    for (var x = 0; x < _htResultNetwork.length; x++) {
       var network = _htResultNetwork[x];
       newstr.add(network.ssid);
     }
     List<String> newlist = newstr.toList();
 
-    return  ListView.builder(
+    return ListView.builder(
         controller: _scrollController,
         itemCount: newlist.length,
-        itemBuilder: (context,int i) {
+        itemBuilder: (context, int i) {
           var network = newlist[i];
           var isConnctedWifi = false;
           if (network.isNotEmpty) {
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
-                Card(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.white70, width: 1),
-                    borderRadius: BorderRadius.only(topRight: Radius.circular(50)),
-                  ),
-                  color: font,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10,),
-                      GestureDetector(
-                        onTap: (){
-                          dialogsenddata(network);
-                        },
-                        child: ListTile(
-                          title: Text('${network}' ,style: TextStyle(fontSize: 14,fontFamily: 'RobotoMono', color: background),),
-                          leading: Icon(Icons.wifi),
-                          trailing: Icon(Icons.copy,color: background,),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.white70, width: 1),
+                      borderRadius:
+                          BorderRadius.only(topRight: Radius.circular(50)),
+                    ),
+                    color: font,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10,
                         ),
-                      ),
-                    ],
+                        GestureDetector(
+                          onTap: () {
+                            dialogsenddata(network);
+                          },
+                          child: ListTile(
+                            title: Text(
+                              '${network}',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontFamily: 'RobotoMono',
+                                  color: background),
+                            ),
+                            leading: Icon(Icons.wifi,color: background,),
+                            trailing: Icon(
+                              Icons.copy,
+                              color: background,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ]
-            );
+                ]);
           } else
             return Center(
               child: Text('No wifi found'),
@@ -336,8 +336,7 @@ class _WifiStationState extends State<WifiStation> {
         },
         shrinkWrap: true,
         reverse: true,
-        physics: NeverScrollableScrollPhysics()
-    );
+        physics: NeverScrollableScrollPhysics());
   }
 }
 

@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 const background = Color(0xFFFEF5ED);
-const font = Color(0xFF99A799);
-const button = Color(0xFF99A799);
-final ButtonStyle style =
-ElevatedButton.styleFrom(primary: button,textStyle: const TextStyle(fontSize: 20,));
+const font = Color(0xFF536DFE);
+const button = Color(0xFF536DFE);
+final ButtonStyle style = ElevatedButton.styleFrom(
+    primary: button,
+    textStyle: const TextStyle(
+      fontSize: 20,
+    ));
 
 class Calibrate extends StatefulWidget {
   final dynamic snapshot;
@@ -19,20 +22,7 @@ class Calibrate extends StatefulWidget {
 
 class _CalibrateState extends State<Calibrate> {
 
-  TextEditingController off_pm1;
-  TextEditingController off_pm2_5;
-  TextEditingController off_pm10;
-  TextEditingController off_co2;
-  TextEditingController off_tvoc;
-  TextEditingController off_temp;
-  TextEditingController off_humid;
-  TextEditingController scale_pm1;
-  TextEditingController scale_pm2_5;
-  TextEditingController scale_pm10;
-  TextEditingController scale_co2;
-  TextEditingController scale_tvoc;
-  TextEditingController scale_temp;
-  TextEditingController scale_humid;
+  TextEditingController off_pm1,off_pm2_5,off_pm10,off_co2,off_tvoc,off_temp,off_humid,scale_pm1,scale_pm2_5,scale_pm10,scale_co2,scale_tvoc,scale_temp,scale_humid;
 
 
   void initState() {
@@ -51,7 +41,6 @@ class _CalibrateState extends State<Calibrate> {
     scale_tvoc = new TextEditingController();
     scale_temp = new TextEditingController();
     scale_humid = new TextEditingController();
-
   }
 
 
@@ -76,360 +65,368 @@ class _CalibrateState extends State<Calibrate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background,
       appBar: AppBar(
-        title: Text("Calibrate",style: TextStyle(color:font)),
-        iconTheme: IconThemeData(color: font),
+        title: Text("Calibrate",style: TextStyle(color:background)),
+        iconTheme: IconThemeData(color:background),
         elevation: 0,
-        backgroundColor: background,
+        backgroundColor: font,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      const Text('PM1'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 120.0,
-                        child :Form(
-                          autovalidateMode:AutovalidateMode.always,
-                          child: TextFormField(
-                            controller: off_pm1,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(5.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+      body: Container(
+        height: double.infinity,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [font, background],
+            )),
+        child:   SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Text('PM1'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 120.0,
+                          child :Form(
+                            autovalidateMode:AutovalidateMode.always,
+                            child: TextFormField(
+                              controller: off_pm1,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(5.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'offset',
                               ),
-                              labelText: 'offset',
                             ),
                           ),
                         ),
-                      ),
 
-                    ],
-                  ),
-                  SizedBox(
-                    width: 120.0,
-                    child :Form(
-                      autovalidateMode:AutovalidateMode.always,
-                      child: TextFormField(
-                        controller: scale_pm1,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                          border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                          ),
-                          labelText: 'scale',
-                        ),
-                      ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      const Text('PM2.5'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 120.0,
-                        child :Form(
-                          autovalidateMode:AutovalidateMode.always,
-                          child: TextFormField(
-                            controller: off_pm2_5,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(5.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'offset',
+                    SizedBox(
+                      width: 120.0,
+                      child :Form(
+                        autovalidateMode:AutovalidateMode.always,
+                        child: TextFormField(
+                          controller: scale_pm1,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                            border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
                             ),
+                            labelText: 'scale',
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 120.0,
-                    child :Form(
-                      autovalidateMode:AutovalidateMode.always,
-                      child: TextFormField(
-                        controller: scale_pm2_5,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                          border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                          ),
-                          labelText: 'scale',
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      const Text('PM10'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 120.0,
-                        child :Form(
-                          autovalidateMode:AutovalidateMode.always,
-                          child: TextFormField(
-                            controller: off_pm10,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(5.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'offset',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 120.0,
-                    child :Form(
-                      autovalidateMode:AutovalidateMode.always,
-                      child: TextFormField(
-                        controller: scale_pm10,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                          border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                          ),
-                          labelText: 'scale',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      const Text('Co2'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 120.0,
-                        child :Form(
-                          autovalidateMode:AutovalidateMode.always,
-                          child: TextFormField(
-                            controller: off_co2,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(5.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'offset',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 120.0,
-                    child :Form(
-                      autovalidateMode:AutovalidateMode.always,
-                      child: TextFormField(
-                        controller: scale_co2,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                          border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                          ),
-                          labelText: 'scale',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      const Text('TVOC'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 120.0,
-                        child :Form(
-                          autovalidateMode:AutovalidateMode.always,
-                          child: TextFormField(
-                            controller: off_tvoc,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(5.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'offset',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 120.0,
-                    child :Form(
-                      autovalidateMode:AutovalidateMode.always,
-                      child: TextFormField(
-                        controller: scale_tvoc,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                          border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                          ),
-                          labelText: 'scale',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      const Text('Temp'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 120.0,
-                        child :Form(
-                          autovalidateMode:AutovalidateMode.always,
-                          child: TextFormField(
-                            controller: off_temp,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(5.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'offset',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 120.0,
-                    child :Form(
-                      autovalidateMode:AutovalidateMode.always,
-                      child: TextFormField(
-                        controller: scale_temp,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                          border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                          ),
-                          labelText: 'offset',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      const Text('Humid'),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 120.0,
-                        child :Form(
-                          autovalidateMode:AutovalidateMode.always,
-                          child: TextFormField(
-                            controller: off_humid,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(5.0),
-                              border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                              ),
-                              labelText: 'offset',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 120.0,
-                    child :Form(
-                      autovalidateMode:AutovalidateMode.always,
-                      child: TextFormField(
-                        controller: scale_humid,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.all(5.0),
-                          border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
-                          ),
-                          labelText: 'scale',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(padding: EdgeInsets.all(8),
-                child:ElevatedButton(onPressed: (){
-                  loadCalibrate();
-                }, child: Text("loadCalibrate"),
-                  style: style,)
+                  ],
                 ),
-              ],
-            )
-          ],
+              ),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Text('PM2.5'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 120.0,
+                          child :Form(
+                            autovalidateMode:AutovalidateMode.always,
+                            child: TextFormField(
+                              controller: off_pm2_5,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(5.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'offset',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 120.0,
+                      child :Form(
+                        autovalidateMode:AutovalidateMode.always,
+                        child: TextFormField(
+                          controller: scale_pm2_5,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                            border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                            ),
+                            labelText: 'scale',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Text('PM10'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 120.0,
+                          child :Form(
+                            autovalidateMode:AutovalidateMode.always,
+                            child: TextFormField(
+                              controller: off_pm10,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(5.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'offset',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 120.0,
+                      child :Form(
+                        autovalidateMode:AutovalidateMode.always,
+                        child: TextFormField(
+                          controller: scale_pm10,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                            border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                            ),
+                            labelText: 'scale',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Text('Co2'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 120.0,
+                          child :Form(
+                            autovalidateMode:AutovalidateMode.always,
+                            child: TextFormField(
+                              controller: off_co2,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(5.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'offset',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 120.0,
+                      child :Form(
+                        autovalidateMode:AutovalidateMode.always,
+                        child: TextFormField(
+                          controller: scale_co2,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                            border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                            ),
+                            labelText: 'scale',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Text('TVOC'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 120.0,
+                          child :Form(
+                            autovalidateMode:AutovalidateMode.always,
+                            child: TextFormField(
+                              controller: off_tvoc,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(5.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'offset',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 120.0,
+                      child :Form(
+                        autovalidateMode:AutovalidateMode.always,
+                        child: TextFormField(
+                          controller: scale_tvoc,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                            border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                            ),
+                            labelText: 'scale',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Text('Temp'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 120.0,
+                          child :Form(
+                            autovalidateMode:AutovalidateMode.always,
+                            child: TextFormField(
+                              controller: off_temp,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(5.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'offset',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 120.0,
+                      child :Form(
+                        autovalidateMode:AutovalidateMode.always,
+                        child: TextFormField(
+                          controller: scale_temp,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                            border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                            ),
+                            labelText: 'offset',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        const Text('Humid'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: 120.0,
+                          child :Form(
+                            autovalidateMode:AutovalidateMode.always,
+                            child: TextFormField(
+                              controller: off_humid,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.all(5.0),
+                                border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'offset',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 120.0,
+                      child :Form(
+                        autovalidateMode:AutovalidateMode.always,
+                        child: TextFormField(
+                          controller: scale_humid,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5.0),
+                            border: UnderlineInputBorder( borderSide: BorderSide(color: Colors.white),
+                            ),
+                            labelText: 'scale',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(padding: EdgeInsets.all(8),
+                      child:ElevatedButton(onPressed: (){
+                        loadCalibrate();
+                      }, child: Text("Save"),
+                        style: style,)
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }
