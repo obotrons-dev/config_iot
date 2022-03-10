@@ -3,31 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-
-const background = Color(0xFFFEF5ED);
-const font = Color(0xFF536DFE);
-const button = Color(0xFF536DFE);
-final ButtonStyle style =
-ElevatedButton.styleFrom(primary: button,textStyle: const TextStyle(fontSize: 20,));
-
+const background = Color(0xFFC1DEAE);
+const write = Color(0xFFFAFAFA);
+const button = Color(0xFF303030);
+const grey = Color(0xFF616161);
+final ButtonStyle style = ElevatedButton.styleFrom(
+    primary: background,
+    textStyle: const TextStyle(
+      fontSize: 20,
+    ));
 
 class Attack extends StatefulWidget {
   final dynamic wifiNetwork;
+
   Attack(this.wifiNetwork);
+
   @override
   _AttackState createState() => _AttackState();
 }
 
 class _AttackState extends State<Attack> {
-  String currentPass = '' , ssid = '' ,pwd = '';
+  String currentPass = '', ssid = '', pwd = '';
   TextEditingController passwords;
-
 
   @override
   void initState() {
     super.initState();
-    passwords = new TextEditingController(text:'pwdIAQ@iot');
-
+    passwords = new TextEditingController(text: 'pwdIAQ@iot');
   }
 
   startAttack() async {
@@ -36,43 +38,43 @@ class _AttackState extends State<Attack> {
     var isConnected = await WiFiForIoTPlugin.connect(widget.wifiNetwork,
         security: NetworkSecurity.WPA, password: currentPass);
 
-    if(isConnected) {
+    if (isConnected) {
       EasyLoading.showSuccess('success');
-    Navigator.pushAndRemoveUntil(
-      context, MaterialPageRoute(builder: (context) => ProfilesConfig()),
-          (Route<dynamic> route) => false,);
-    EasyLoading.dismiss();
-    }
-    else {
-    }
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilesConfig()),
+        (Route<dynamic> route) => false,
+      );
+      EasyLoading.dismiss();
+    } else {}
   }
 
   bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Text("Password for " + widget.wifiNetwork,style: TextStyle(color: background),),
-        backgroundColor: font,
+        title: Text(
+          "Password for " + widget.wifiNetwork,
+          style: TextStyle(color: grey),
+        ),
+        backgroundColor: background,
       ),
-      backgroundColor: background,
       body: Container(
-        height: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [font, background],
-            )),
+        color: write,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 30,),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 50),
-              child:SizedBox(width:300 ,
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: SizedBox(
+                width: 300,
                 child: TextField(
                   obscureText: _isObscure,
                   controller: passwords,
@@ -91,14 +93,17 @@ class _AttackState extends State<Attack> {
                     ),
                   ),
                 ),
-              ),),
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(padding: EdgeInsets.all(10),
+                Padding(
+                  padding: EdgeInsets.all(10),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.grey)),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.grey)),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -110,9 +115,10 @@ class _AttackState extends State<Attack> {
                         style: TextStyle(fontSize: 18.0),
                       ),
                     ),
-                  ),),
+                  ),
+                ),
                 ElevatedButton(
-                  style:style,
+                  style: style,
                   onPressed: () {
                     startAttack();
                   },

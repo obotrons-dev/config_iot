@@ -4,33 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-const background = Color(0xFFFEF5ED);
-const font = Color(0xFF536DFE);
-const button = Color(0xFF536DFE);
-final ButtonStyle style = ElevatedButton.styleFrom(
-    primary: button,
-    textStyle: const TextStyle(
-      fontSize: 20,
-    ));
 
-final snackBar = SnackBar(
-  content: Container(
-    height: 30,
-    padding: EdgeInsets.only(top: 5),
-    child: Text(
-      'copy to clipboard ',
-      style: TextStyle(color: font, fontSize: 14),
-      textAlign: TextAlign.center,
-    ),
-  ),
-  duration: const Duration(milliseconds: 1500),
-  padding: const EdgeInsets.symmetric(
-    horizontal: 8.0, // Inner padding for SnackBar content.
-  ),
-  width: 200,
-  backgroundColor: background,
-  behavior: SnackBarBehavior.floating,
-);
+const background = Color(0xFFC1DEAE);
+const write = Color(0xFFFAFAFA);
+const button = Color(0xFF536DFE);
+const grey = Color(0xFF616161);
+final ButtonStyle style = ElevatedButton.styleFrom(
+    primary: background,
+    textStyle: textstyle);
+const textstyle =
+TextStyle(color: grey, fontSize: 20, fontFamily: 'RobotoMono');
+
 
 class WifiStationIOS extends StatefulWidget {
   final dynamic data;
@@ -49,22 +33,19 @@ class _WifiStationIOSState extends State<WifiStationIOS> {
   Widget build(BuildContext poContext) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: font,
-          iconTheme: IconThemeData(color: background),
+          backgroundColor: background,
+          iconTheme: IconThemeData(color: write),
           elevation: 0,
         ),
         body: Container(
-          height: double.infinity,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [font, background],
-          )),
+          height: double.infinity,color: background,
           child: Center(
             child: Column(
               children: [
                 Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
                     margin: EdgeInsets.all(30),
                     child: Padding(
                   padding: EdgeInsets.all(12),
@@ -75,7 +56,7 @@ class _WifiStationIOSState extends State<WifiStationIOS> {
                         style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'RobotoMono',
-                            color: font),
+                            color: grey),
                       ),
                       SizedBox(
                         height: 20,

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-const background = Color(0xFFFEF5ED);
+const background = Color(0xFFC1DEAE);
 const font = Color(0xFF536DFE);
+const write = Color(0xFFFAFAFA);
 const button = Color(0xFF536DFE);
+const grey = Color(0xFF616161);
 final ButtonStyle style = ElevatedButton.styleFrom(
-    primary: button,
+    primary: background,
     textStyle: const TextStyle(
       fontSize: 20,
     ));
@@ -60,7 +62,7 @@ class _LoginState extends State<Login> {
               gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [font, background],
+            colors: [background,Colors.white,Colors.white],
           )),
           child: SingleChildScrollView(
             child: Column(
@@ -68,20 +70,25 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: const EdgeInsets.only(top: 60.0),
                   child: Center(
-                    child: Container(
-                        width: 200,
-                        height: 150,
-                        /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
-                        child: Image.asset('images/Obt.png')),
+                    child: Column(
+                      children: [
+                        Container(
+                            width: 200,
+                            height: 150,
+                            child: Image.asset('images/Obt.png')
+                        ),
+                      ],
+                     ),
                   ),
                 ),
-                Text("Manage and Config Device",style: TextStyle(fontSize: 20,fontFamily: 'RobotoMono',color: background ),),
+                Text("Manage & Config Device",style: TextStyle(fontSize: 20,fontFamily: 'RobotoMono',color: grey ),),
                 Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
                     margin: EdgeInsets.all(30),
                     child: Padding(
-                      padding: EdgeInsets.all(12),
+                      padding: EdgeInsets.all(15),
                       child: Column(
                         children: [
                           Padding(

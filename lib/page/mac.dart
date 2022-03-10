@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:ap_config/json/calibrateapi.dart';
 import 'package:ap_config/json/data.dart';
 import 'package:ap_config/json/formdata.dart';
 import 'package:ap_config/page/calibrate.dart';
@@ -14,11 +15,12 @@ import 'package:app_settings/app_settings.dart';
 import 'dart:io' show Platform;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-const background = Color(0xFFFEF5ED);
-const font = Color(0xFF536DFE);
+const background = Color(0xFFC1DEAE);
+const write = Color(0xFFFAFAFA);
 const button = Color(0xFF536DFE);
+const grey = Color(0xFF616161);
 final ButtonStyle style = ElevatedButton.styleFrom(
-    primary: button,
+    primary: background,
     textStyle: const TextStyle(
       fontSize: 20,
     ));
@@ -94,7 +96,7 @@ class _MacAppState extends State<MacApp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Color(0xFFE64A19),
-                    textStyle: const TextStyle(fontSize: 20, color: font)),
+                    textStyle: const TextStyle(fontSize: 20, color: write)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -105,7 +107,7 @@ class _MacAppState extends State<MacApp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Color(0xFF388E3C),
-                    textStyle: const TextStyle(fontSize: 20, color: font)),
+                    textStyle: const TextStyle(fontSize: 20, color: write)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -134,7 +136,7 @@ class _MacAppState extends State<MacApp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Color(0xFFE64A19),
-                    textStyle: const TextStyle(fontSize: 20, color: font)),
+                    textStyle: const TextStyle(fontSize: 20, color: write)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -145,7 +147,7 @@ class _MacAppState extends State<MacApp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Color(0xFF388E3C),
-                    textStyle: const TextStyle(fontSize: 20, color: font)),
+                    textStyle: const TextStyle(fontSize: 20, color: write)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -178,9 +180,22 @@ class _MacAppState extends State<MacApp> {
           horizontal: 8.0, // Inner padding for SnackBar content.
         ),
         width: 250,
-        backgroundColor: font,
+        backgroundColor: write,
         behavior: SnackBarBehavior.floating,
       ));
+    }
+  }
+
+  checkOnboard(snapshot) async {
+    EasyLoading.show(status: "loading");
+    try {
+      var url = "http://${snapshot.data.hWIP}/checkOnboard";
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        EasyLoading.dismiss();
+      }
+    } on Exception catch (e) {
+      EasyLoading.showError('Failed to connect');
     }
   }
 
@@ -234,7 +249,7 @@ class _MacAppState extends State<MacApp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Color(0xFFE64A19),
-                    textStyle: const TextStyle(fontSize: 20, color: font)),
+                    textStyle: const TextStyle(fontSize: 20, color: write)),
                 child: Text('CANCEL'),
                 onPressed: () {
                   setState(() {
@@ -245,7 +260,7 @@ class _MacAppState extends State<MacApp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     primary: Color(0xFF388E3C),
-                    textStyle: const TextStyle(fontSize: 20, color: font)),
+                    textStyle: const TextStyle(fontSize: 20, color: write)),
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -267,6 +282,21 @@ class _MacAppState extends State<MacApp> {
       EasyLoading.showError("Failed to Update");
     }
   }
+  checkCalibrate(snapshot) async {
+    EasyLoading.show(status: "loading");
+    try {
+      var url = "http://${snapshot.data.hWIP}/checkCalibrate";
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+          var str = JsonCalibrate.fromJson(jsonDecode(response.body));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CalibratePage(snapshot,str)));
+          EasyLoading.dismiss();
+      }
+    } on Exception catch (e) {
+      EasyLoading.showError('Failed to connect');
+    }
+  }
 
   Widget dataQrcode(context) {
     return FutureBuilder<IAQ>(
@@ -274,258 +304,290 @@ class _MacAppState extends State<MacApp> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Container(
-            child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: Column(children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Mac Address :${snapshot.data.hWMAC}' ??
-                              "ไม่มีข้อมูล",
-                          style: TextStyle(fontSize: 20, color: background),
-                        ),
-                        Text(
-                            'IP Address :${snapshot.data.hWIP}' ??
-                                "ไม่มีข้อมูล",
-                            style: TextStyle(fontSize: 20, color: background)),
-                        Text(
-                            'IAQ SSID :${snapshot.data.IAQSSID}' ??
-                                "ไม่มีข้อมูล",
-                            style: TextStyle(fontSize: 20, color: background)),
-                      ],
+            child: SingleChildScrollView(
+              child: Column(children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Mac Address :${snapshot.data.hWMAC}' ?? "ไม่มีข้อมูล",
+                      style: TextStyle(fontSize: 20, color: grey),
                     ),
-                    Column(
+                    Text('IP Address :${snapshot.data.hWIP}' ?? "ไม่มีข้อมูล",
+                        style: TextStyle(fontSize: 20, color: grey)),
+                    Text('IAQ SSID :${snapshot.data.IAQSSID}' ?? "ไม่มีข้อมูล",
+                        style: TextStyle(fontSize: 20, color: grey)),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (Platform.isAndroid) {
+                          dialogConnect(snapshot);
+                        } else if (Platform.isIOS) {
+                          AppSettings.openSoundSettings();
+                        }
+                      },
+                      child: Text(
+                        "connect to " '${snapshot.data.IAQSSID}',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      style: style,
+                    ),
+                  ],
+                ),
+                    SizedBox(height: 10),
+                 Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                        color: write,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(75.0))),
+                    child: Column(
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            if (Platform.isAndroid) {
-                              dialogConnect(snapshot);
-                            } else if (Platform.isIOS) {
-                              AppSettings.openSoundSettings();
-                            }
+                        SizedBox(height: 20,),
+                        GestureDetector(
+                          onTap: () {
+                            checkOnboard(snapshot);
                           },
-                          child: Text(
-                            "connect to " '${snapshot.data.IAQSSID}',
-                            style: TextStyle(fontSize: 15),
+                          child: Container(
+                            width: 300,
+                            height: 70,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                new BorderRadius.circular(20.0),
+                                boxShadow: [
+                                  BoxShadow(color: Colors.grey, blurRadius: 0.5)
+                                ],
+                                color: Colors.white),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Check Device",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'RobotoMono',
+                                        color: grey),
+                                  ),
+                                  Container(
+                                    width: 50,
+                                    child: Icon(Icons.check, color: grey),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          style: style,
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                checkConfig(snapshot);
-                              },
-                              child: Container(
-                                width: 300,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: new BorderRadius.circular(20.0),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [font, background],
-                                    )),
-                                child: Padding(
-                                  padding: EdgeInsets.all(30),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Check Config",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: 'RobotoMono',
-                                            color: background),
-                                      ),
-                                      Container(
-                                        width: 50,
-                                        child: Icon(Icons.settings,
-                                            color: font),
-                                      ),
-                                    ],
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            checkConfig(snapshot);
+                          },
+                          child: Container(
+                            width: 300,
+                            height: 70,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                new BorderRadius.circular(20.0),
+                                boxShadow: [
+                                  BoxShadow(color: Colors.grey, blurRadius: 0.5)
+                                ],
+                                color: Colors.white),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Check Config",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'RobotoMono',
+                                        color: grey),
                                   ),
-                                ),
-                                ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                checkData(snapshot);
-                              },
-                              child: Container(
-                                width: 300,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: new BorderRadius.circular(20.0),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [font, background],
-                                    )),
-                                child: Padding(
-                                  padding: EdgeInsets.all(30),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Check Data",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: 'RobotoMono',
-                                            color: background),
-                                      ),
-                                      Container(
-                                        width: 50,
-                                        child: Icon(Icons.settings,
-                                            color: font),
-                                      ),
-                                    ],
+                                  Container(
+                                    width: 50,
+                                    child:
+                                    Icon(Icons.settings, color: grey),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                dialogUpdate(snapshot);
-                              },
-                              child: Container(
-                                width: 300,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: new BorderRadius.circular(20.0),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [font, background],
-                                    )),
-                                child: Padding(
-                                  padding: EdgeInsets.all(30),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "OTA Update",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: 'RobotoMono',
-                                            color: background),
-                                      ),
-                                      Container(
-                                        width: 50,
-                                        child: Icon(Icons.cloud_upload_outlined,
-                                            color: font),
-                                      ),
-                                    ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            checkData(snapshot);
+                          },
+                          child: Container(
+                            width: 300,
+                            height: 70,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                new BorderRadius.circular(20.0),
+                                boxShadow: [
+                                  BoxShadow(color: Colors.grey, blurRadius: 0.5)
+                                ],
+                                color: Colors.white),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Check Data",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'RobotoMono',
+                                        color: grey),
                                   ),
-                                ),
+                                  Container(
+                                    width: 50,
+                                    child:
+                                    Icon(Icons.settings, color: grey),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                dialogReset(snapshot);
-                              },
-                              child: Container(
-                                width: 300,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: new BorderRadius.circular(20.0),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [font, background],
-                                    )),
-                                child: Padding(
-                                  padding: EdgeInsets.all(30),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Reset board",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: 'RobotoMono',
-                                            color: background),
-                                      ),
-                                      Container(
-                                        width: 50,
-                                        child: Icon(
-                                            Icons
-                                                .swap_horizontal_circle_outlined,
-                                            color: font),
-                                      ),
-                                    ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            dialogUpdate(snapshot);
+                          },
+                          child: Container(
+                            width: 300,
+                            height: 70,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                new BorderRadius.circular(20.0),
+                                boxShadow: [
+                                  BoxShadow(color: Colors.grey, blurRadius: 0.5)
+                                ],
+                                color: Colors.white),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "OTA Update",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'RobotoMono',
+                                        color: grey),
                                   ),
-                                ),
+                                  Container(
+                                    width: 50,
+                                    child: Icon(Icons.cloud_upload_outlined,
+                                        color: grey),
+                                  ),
+                                ],
                               ),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            Calibrate(snapshot)));
-                              },
-                              child: Container(
-                                width: 300,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: new BorderRadius.circular(20.0),
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [font, background],
-                                    )),
-                                child: Padding(
-                                  padding: EdgeInsets.all(30),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Calibrate",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: 'RobotoMono',
-                                            color: background),
-                                      ),
-                                      Container(
-                                        width: 50,
-                                        child: Icon(Icons.calculate,
-                                            color: font),
-                                      ),
-                                    ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            dialogReset(snapshot);
+                          },
+                          child: Container(
+                            width: 300,
+                            height: 70,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                new BorderRadius.circular(20.0),
+                                boxShadow: [
+                                  BoxShadow(color: Colors.grey, blurRadius: 0.5)
+                                ],
+                                color: Colors.white),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Reset board",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'RobotoMono',
+                                        color: grey),
                                   ),
-                                ),
+                                  Container(
+                                    width: 50,
+                                    child: Icon(
+                                        Icons
+                                            .swap_horizontal_circle_outlined,
+                                        color: grey),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        )
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            checkCalibrate(snapshot);
+                          },
+                          child: Container(
+                            width: 300,
+                            height: 70,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                new BorderRadius.circular(20.0),
+                                boxShadow: [
+                                  BoxShadow(color: Colors.grey, blurRadius: 0.5)
+                                ],
+                                color: Colors.white),
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Calibrate",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'RobotoMono',
+                                        color: grey),
+                                  ),
+                                  Container(
+                                    width: 50,
+                                    child:
+                                    Icon(Icons.calculate, color: grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ]),
-                )),
+                  ),
+
+              ]),
+            ),
           );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
@@ -549,24 +611,12 @@ class _MacAppState extends State<MacApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: font,
-        iconTheme: IconThemeData(color: background),
+        backgroundColor: background,
+        iconTheme: IconThemeData(color: write),
         elevation: 0,
-        title: Text(
-          'QR Scan',
-          style: TextStyle(color: background),
-        ),
       ),
       resizeToAvoidBottomInset: false,
-      body: Container(
-          height: double.infinity,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [font, background],
-          )),
-          child: dataQrcode(context)),
+      body: Container(color: background, child: dataQrcode(context)),
     );
   }
 }

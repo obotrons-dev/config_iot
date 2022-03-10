@@ -6,11 +6,13 @@ import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:io' show Platform;
 import 'package:ap_config/page/connectAP.dart';
 
-const background = Color(0xFFFEF5ED);
+const background = Color(0xFFC1DEAE);
 const font = Color(0xFF536DFE);
+const write = Color(0xFFFAFAFA);
 const button = Color(0xFF536DFE);
+const grey = Color(0xFF616161);
 final ButtonStyle style = ElevatedButton.styleFrom(
-    primary: button,
+    primary: background,
     textStyle: const TextStyle(
       fontSize: 20,
     ));
@@ -27,18 +29,13 @@ class _WifiApState extends State<WifiAp> {
   Widget build(BuildContext poContext) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: font,
-          iconTheme: IconThemeData(color: background),
+          backgroundColor: background,
+          iconTheme: IconThemeData(color: write),
           elevation: 0,
         ),
         body: Container(
           height: double.infinity,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [font, background],
-          )),
+          color: background,
           child: getWidgets(poContext),
         ));
   }
@@ -127,10 +124,10 @@ class _WifiApState extends State<WifiAp> {
         child: ListTile(
             leading: Text(
               'Wi-Fi',
-              style: TextStyle(color: background),
+              style: TextStyle(color: grey),
             ),
             trailing: Switch(
-                activeColor: background,
+                activeColor: write,
                 value: _isEnabled,
                 onChanged: (v) {
                   if (_isEnabled) {
@@ -142,13 +139,13 @@ class _WifiApState extends State<WifiAp> {
                   setState(() {
                     _isEnabled = !_isEnabled;
                   });
-                })),
-        // color: _isEnabled ? Colors.green : Colors.red,
+                })
+        ),
       ),
       SizedBox(height: 10),
       Text(
         'Wi-Fi Found',
-        style: TextStyle(fontSize: 25, color: background),
+        style: TextStyle(fontSize: 25, color: grey),
         textAlign: TextAlign.center,
       ),
       IconButton(
@@ -156,7 +153,16 @@ class _WifiApState extends State<WifiAp> {
           onPressed: () {
             getWifis();
           }),
-      getList(context),
+      Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+            color: write,borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0))
+        ),
+        padding: EdgeInsets.all(20),
+        child:getList(context),
+      ),
+
     });
     if (_isEnabled) {
       WiFiForIoTPlugin.isConnected().then((val) {
@@ -174,7 +180,7 @@ class _WifiApState extends State<WifiAp> {
     Set<String> newstr = Set();
     for (var x = 0; x < _htResultNetwork.length; x++) {
       var network = _htResultNetwork[x];
-      if (network.ssid.contains('iaq')) newstr.add(network.ssid);
+      if (network.ssid.contains('IAQ')) newstr.add(network.ssid);
     }
     List<String> newlist = newstr.toList();
     return ListView.builder(
@@ -186,15 +192,15 @@ class _WifiApState extends State<WifiAp> {
           if (_isConnected) isConnctedWifi = isRegisteredWifiNetwork(network);
           if (newstr != null) {
             return Card(
-              color: font,
+              color: write,
               child: ListTile(
                   leading: Icon(
                     Icons.wifi,
-                    color: background,
+                    color: grey,
                   ),
                   title: Text(
                     '${network}',
-                    style: TextStyle(color: background),
+                    style: TextStyle(color: grey),
                   ),
                   trailing: !isConnctedWifi
                       ? OutlineButton(
@@ -205,7 +211,7 @@ class _WifiApState extends State<WifiAp> {
                           },
                           child: Text(
                             'connect',
-                            style: TextStyle(color: background),
+                            style: TextStyle(color: grey),
                           ),
                         )
                       : SizedBox()),

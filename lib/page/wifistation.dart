@@ -6,12 +6,15 @@ import 'package:wifi_iot/wifi_iot.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-const background = Color(0xFFFEF5ED);
-const font = Color(0xFF536DFE);
-const button = Color(0xFF536DFE);
-final ButtonStyle style =
-ElevatedButton.styleFrom(
-    primary: button, textStyle: const TextStyle(fontSize: 20,));
+const background = Color(0xFFC1DEAE);
+const write = Color(0xFFFAFAFA);
+const button = Color(0xFF303030);
+const grey = Color(0xFF616161);
+final ButtonStyle style = ElevatedButton.styleFrom(
+    primary: background,
+    textStyle: const TextStyle(
+      fontSize: 20,
+    ));
 
 final snackBar = SnackBar(
   content: Container(
@@ -49,22 +52,16 @@ class _WifiStationState extends State<WifiStation> {
   @override
   Widget build(BuildContext poContext) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: font,
-        iconTheme: IconThemeData(color: background),
-        elevation: 0,
-      ),
-      body: Container(
-        height: double.infinity,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [font, background],
-            )),
-        child: getWidgets(poContext),
-      )
-    );
+        appBar: AppBar(
+          backgroundColor: background,
+          iconTheme: IconThemeData(color: write),
+          elevation: 0,
+        ),
+        body: Container(
+          height: double.infinity,
+          color: background,
+          child: getWidgets(poContext),
+        ));
   }
 
   List<WifiNetwork> _htResultNetwork = [];
@@ -82,7 +79,7 @@ class _WifiStationState extends State<WifiStation> {
     await EasyLoading.show(status: 'loading...');
     if (wifi_ssid.text.length > 0 && passwords.text.length > 0) {
       var senddata = {
-        "local":"no",
+        "local": "no",
         "config": this.widget.data,
         "wifi": {"ssid": wifi_ssid.text, "wifi_password": passwords.text}
       };
@@ -102,6 +99,7 @@ class _WifiStationState extends State<WifiStation> {
       }
     }
   }
+
   getWifis() async {
     _htResultNetwork = await loadWifiList();
     setState(() {});
@@ -152,66 +150,62 @@ class _WifiStationState extends State<WifiStation> {
       SizedBox(height: 10),
       Text(
         "Config Wifi",
-        style: TextStyle(fontSize: 20, fontFamily: 'RobotoMono', color: background),
+        style: TextStyle(fontSize: 20, fontFamily: 'RobotoMono', color: grey),
       ),
       IconButton(
           icon: Icon(
             Icons.refresh,
-            color: background,
+            color: grey,
           ),
           onPressed: () {
             getWifis();
           }),
-      getList(context),
-      SizedBox(
-        height: 20,
-      ),
-      // Container(
-      //   height: 20,
-      //   child:  InkWell(
-      //     onTap: showToast,
-      //     child: Text("Other network",style: TextStyle(color: Colors.blue),),
-      //   ),
-      // ),
-      Visibility(
-        visible: _isVisible,
-        child: SizedBox(
-          width: 300,
-          child: TextField(
-            controller: wifi_ssid,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'ssid',
+      Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: write,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(75.0))),
+          padding: EdgeInsets.all(40),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                getList(context),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 300,
+                  child: TextField(
+                    controller: wifi_ssid,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'ssid',
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                ),
+                SizedBox(
+                  width: 300,
+                  child: TextField(
+                    controller: passwords,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  style: style,
+                  onPressed: () {
+                    sendData();
+                  },
+                  child: Text("submit"),
+                ),
+              ],
             ),
-          ),
-        ),
-      ),
-      Padding(
-        padding: EdgeInsets.all(5),
-      ),
-      Visibility(
-        visible: _isVisible,
-        child: SizedBox(
-          width: 300,
-          child: TextField(
-            controller: passwords,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Password',
-            ),
-          ),
-        ),
-      ),
-      Visibility(
-        visible: _isVisible,
-        child: ElevatedButton(
-          style: style,
-          onPressed: () {
-            sendData();
-          },
-          child: Text("submit"),
-        ),
-      ),
+          )),
     });
 
     return htPrimaryWidgets;
@@ -296,11 +290,10 @@ class _WifiStationState extends State<WifiStation> {
                 children: [
                   Card(
                     shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.white70, width: 1),
                       borderRadius:
                           BorderRadius.only(topRight: Radius.circular(50)),
                     ),
-                    color: font,
+                    color: background,
                     child: Column(
                       children: [
                         SizedBox(
@@ -316,12 +309,15 @@ class _WifiStationState extends State<WifiStation> {
                               style: TextStyle(
                                   fontSize: 14,
                                   fontFamily: 'RobotoMono',
-                                  color: background),
+                                  color: grey),
                             ),
-                            leading: Icon(Icons.wifi,color: background,),
+                            leading: Icon(
+                              Icons.wifi,
+                              color: grey,
+                            ),
                             trailing: Icon(
-                              Icons.copy,
-                              color: background,
+                              Icons.touch_app_outlined,
+                              color: grey,
                             ),
                           ),
                         ),
